@@ -4,17 +4,18 @@ from tkinter import messagebox
 from functions import open_window
 
 
-def show_main(name, job):
-    open_window(MainSystem, 1280, 800, name, job)
+def show_main(name, job, prev_win):
+    open_window(MainSystem, 1280, 800, name, job, prev_win)
 
 
 class MainSystem:
-    def __init__(self, name, job):
+    def __init__(self, name, job, login_class):
         self.root = Toplevel()
         self.root.title(f"Bienvenido {name.capitalize()}, Carniceria Margarita")
         self.root.iconbitmap("./images/favicon.ico")
         self.root.resizable(False, False)
 
+        self.prev_win = login_class
         # User
         self.name = name
         self.job = job
@@ -104,7 +105,12 @@ class MainSystem:
 
         # Menu
         self.menu_frame = Frame(self.root, bd=2, relief=GROOVE, width=278)
-        self.menu_frame.grid(row=0, column=3, rowspan=2, sticky=N + S)
+        self.menu_frame.grid(row=0, column=3, rowspan=2, sticky=N+S)
+
+        Button(self.menu_frame, text="Log Out", width=10, height=2, command=self.logout).place(x=175, y=725)
+        Button(self.menu_frame, text="Imprimir",
+               width=15, height=2, bg="#bbbcbd", activebackground="#8c9196")\
+            .place(x=25, y=725)
 
         # Terminal
         self.terminal_bg = Frame(self.root, bd=2, width=1000, bg="#b7b7b7", height=200)
@@ -113,3 +119,7 @@ class MainSystem:
         self.terminal_frame = Frame(self.terminal_bg, bd=6, relief=GROOVE, bg="white", width=970, height=170,
                                     padx=15, pady=10)
         self.terminal_frame.pack(padx=15, pady=15)
+
+    def logout(self):
+        self.prev_win.deiconify()
+        self.root.destroy()

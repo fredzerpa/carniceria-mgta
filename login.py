@@ -2,7 +2,7 @@ from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
 from register_user import show_register
-from main import MainSystem, show_main
+from main import show_main
 from functions import center_window
 
 
@@ -62,11 +62,13 @@ class LoginSystem:
                     user_exists = True
                     break
         if user_exists:
+            self.password.delete(0, END)
             self.root.withdraw()
-            show_main(username, job)
+            show_main(username, job, self.root)
         else:
             res = messagebox.showerror("Wrong User/Password", "Usuario y/o Clave Erronea.")
             if res: self.root.focus()
+
 
 root = Tk()
 login_window = LoginSystem(root)

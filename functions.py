@@ -14,7 +14,7 @@ def open_window(win_class, width, height, *class_attr):
         if window.root.state() == "normal": window.root.focus()
     except:
         try:
-            window = win_class(class_attr[0], class_attr[1])
+            window = win_class(class_attr[0], class_attr[1], class_attr[2])
             center_window(window.root, width, height)
         except IndexError:
             window = win_class()
