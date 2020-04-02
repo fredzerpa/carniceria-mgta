@@ -2,6 +2,7 @@ from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
 from functions import open_window
+from receipt import Receipt, show_receipt
 
 
 def show_main(name, job, prev_win):
@@ -9,13 +10,14 @@ def show_main(name, job, prev_win):
 
 
 class MainSystem:
-    def __init__(self, name, job, login_class):
+    def __init__(self, prev_win, name, job):
         self.root = Toplevel()
         self.root.title(f"Bienvenido {name.capitalize()}, Carniceria Margarita")
         self.root.iconbitmap("./images/favicon.ico")
         self.root.resizable(False, False)
 
-        self.prev_win = login_class
+        self.login_win = prev_win
+
         # User
         self.name = name
         self.job = job
@@ -107,8 +109,10 @@ class MainSystem:
         self.menu_frame = Frame(self.root, bd=2, relief=GROOVE, width=278)
         self.menu_frame.grid(row=0, column=3, rowspan=2, sticky=N+S)
 
-        Button(self.menu_frame, text="Log Out", width=10, height=2, command=self.logout).place(x=175, y=725)
-        Button(self.menu_frame, text="Imprimir",
+        Button(self.menu_frame, text="Log Out", width=10, height=2, command=self.logout)\
+            .place(x=175, y=725)
+
+        Button(self.menu_frame, text="Imprimir", command=self.print_purchase,
                width=15, height=2, bg="#bbbcbd", activebackground="#8c9196")\
             .place(x=25, y=725)
 
@@ -121,5 +125,8 @@ class MainSystem:
         self.terminal_frame.pack(padx=15, pady=15)
 
     def logout(self):
-        self.prev_win.deiconify()
+        self.login_win.deiconify()
         self.root.destroy()
+
+    def print_purchase(self):
+        pass
