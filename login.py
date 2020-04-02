@@ -60,9 +60,10 @@ class LoginSystem:
 
                 if self.username.get() == username and self.password.get() == password:
                     user_exists = True
+                    break
         if user_exists:
             self.root.withdraw()
-            show_main()
+            show_main(username, job)
         else:
             res = messagebox.showerror("Wrong User/Password", "Usuario y/o Clave Erronea.")
             if res: self.root.focus()

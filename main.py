@@ -1,50 +1,115 @@
 from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
-from functions import center_window, open_window
+from functions import open_window
 
 
-def show_main():
-    open_window(MainSystem, 1280, 800)
+def show_main(name, job):
+    open_window(MainSystem, 1280, 800, name, job)
 
 
 class MainSystem:
-    def __init__(self):
+    def __init__(self, name, job):
         self.root = Toplevel()
-        self.root.title("Bienvenido a Carniceria Margarita")
+        self.root.title(f"Bienvenido {name.capitalize()}, Carniceria Margarita")
         self.root.iconbitmap("./images/favicon.ico")
         self.root.resizable(False, False)
 
+        # User
+        self.name = name
+        self.job = job
+
         # Images
-        self.logo = ImageTk.PhotoImage(Image.open("./images/logo.png"))
-        self.user_logo = ImageTk.PhotoImage(Image.open("./images/user.png"))
-        self.password_logo = ImageTk.PhotoImage(Image.open("./images/lock-icon.png"))
+        self.bg_image = ImageTk.PhotoImage(Image.open("./images/main-logo.png"))
+        self.products = {
+            "ribs": {
+                "name": "Baby Back Ribs",
+                "price": 3,
+                "image": PhotoImage(file=r"./images/products/ribs.png").subsample(4, 4)
+            },
+            "groundBeef": {
+                "name": "Carne Molida",
+                "price": 2.5,
+                "image": PhotoImage(file=r"./images/products/carne-molida.png").subsample(4, 4)
+            },
+            "chicken": {
+                "name": "Muslo de Pollo",
+                "price": 1.5,
+                "image": PhotoImage(file=r"./images/products/muslo.png").subsample(4, 4)
+            },
+            "steak": {
+                "name": "Bistec",
+                "price": 3.5,
+                "image": PhotoImage(file=r"./images/products/bistec.png").subsample(4, 4)
+            },
+            "chorizo": {
+                "name": "Chorizo",
+                "price": 10,
+                "image": PhotoImage(file=r"./images/products/chorizo.png").subsample(4, 4)
+            },
+            "bacon": {
+                "name": "Tocineta",
+                "price": 5,
+                "image": PhotoImage(file=r"./images/products/tocineta.png").subsample(4, 4)
+            },
+            "meatRoast": {
+                "name": "Carne para Mechar",
+                "price": 2,
+                "image": PhotoImage(file=r"./images/products/mechada.png").subsample(4, 4)
+            },
+            "porkLeg": {
+                "name": "Pernil",
+                "price": 3.5,
+                "image": PhotoImage(file=r"./images/products/pernil.png").subsample(4, 4)
+            },
+            "cheese": {
+                "name": "Baby Back Ribs",
+                "price": 3,
+                "image": PhotoImage(file=r"./images/products/queso.png").subsample(4, 4)
+            },
+            "ham": {
+                "name": "Carne Molida",
+                "price": 2.5,
+                "image": PhotoImage(file=r"./images/products/jamon.png").subsample(4, 4)
+            }
+        }
+        # Working Area
+        self.working_bg = Label(self.root, image=self.bg_image, bg="black")
+        self.working_bg.grid(row=0, column=0, columnspan=3)
 
-        # Login Logo
-        Label(self.root, image=self.logo).grid(row=0, column=0, columnspan=2)
+        self.working_frame = Frame(self.working_bg, bd=4, bg="white", relief=RIDGE,
+                                   width=950, height=550, padx=10, pady=10)
+        self.working_frame.pack(pady=25, padx=25)
 
-        # Login Frame
-        login_frame = Frame(self.root, height=400, width=200)
-        login_frame.grid(row=0, column=2, sticky=N + S)
+        Button(self.working_frame, image=self.products["ribs"]["image"], activebackground="#ccc")\
+            .place(x=0, y=0)
+        Button(self.working_frame, image=self.products["groundBeef"]["image"], activebackground="#ccc")\
+            .place(x=150, y=0)
+        Button(self.working_frame, image=self.products["chicken"]["image"], activebackground="#ccc")\
+            .place(x=300, y=0)
+        Button(self.working_frame, image=self.products["steak"]["image"], activebackground="#ccc")\
+            .place(x=450, y=0)
+        Button(self.working_frame, image=self.products["chorizo"]["image"], activebackground="#ccc")\
+            .place(x=600, y=0)
+        Button(self.working_frame, image=self.products["bacon"]["image"], activebackground="#ccc")\
+            .place(x=750, y=0)
+        Button(self.working_frame, image=self.products["meatRoast"]["image"], activebackground="#ccc")\
+            .place(x=0, y=150)
+        Button(self.working_frame, image=self.products["porkLeg"]["image"], activebackground="#ccc")\
+            .place(x=150, y=150)
+        Button(self.working_frame, image=self.products["cheese"]["image"], state=DISABLED)\
+            .place(x=300, y=150)
+        Button(self.working_frame, image=self.products["ham"]["image"], state=DISABLED)\
+            .place(x=450, y=150)
 
-        # Username Widgets
-        Label(login_frame, image=self.user_logo).place(x=50, y=110)
-        Label(login_frame, text="Usuario", font=("Sans-serif", 12)).place(x=75, y=110)
-        self.username = Entry(login_frame, width=30)
-        self.username.place(x=7, y=140)
+        # Menu
+        self.menu_frame = Frame(self.root, bd=2, relief=GROOVE, width=278)
+        self.menu_frame.grid(row=0, column=3, rowspan=2, sticky=N + S)
 
-        # Password Widgets
-        Label(login_frame, image=self.password_logo).place(x=60, y=170)
-        Label(login_frame, text="Clave", font=("Sans-serif", 12)).place(x=80, y=171)
-        self.password = Entry(login_frame, width=30, show="*")
-        self.password.place(x=7, y=200)
+        # Terminal
+        self.terminal_bg = Frame(self.root, bd=2, width=1000, bg="#b7b7b7", height=200)
+        self.terminal_bg.grid(row=1, column=0, columnspan=3)
 
-        # Register Button
-        Button(login_frame, text="Register", width=10
-               ).place(x=10, y=235)
-        # Log In Button
-        Button(login_frame, text="Log In", width=10, bg="#bbbcbd", activebackground="#8c9196").place(x=105, y=235)
-
-        # Forgot Username
-        Label(login_frame, text="¿Olvidó la contraseña?").place(x=7, y=265)
-        Button(login_frame, text="Click aqui", bd=0, fg="Blue", activeforeground="Purple").place(x=130, y=265)
+        self.terminal_frame = Frame(self.terminal_bg, bd=6, relief=GROOVE, bg="white", width=970, height=170,
+                                    padx=15, pady=10)
+        self.terminal_frame.pack(padx=15, pady=15)

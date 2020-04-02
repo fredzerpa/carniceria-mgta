@@ -8,12 +8,16 @@ def center_window(win, width, height):
     win.geometry(f"{width}x{height}+{x_cordinate}+{y_cordinate}")
 
 
-def open_window(win_class, width, height):
+def open_window(win_class, width, height, *class_attr):
     global window
     try:
         if window.root.state() == "normal": window.root.focus()
     except:
-        window = win_class()
-        center_window(window.root, width, height)
+        try:
+            window = win_class(class_attr[0], class_attr[1])
+            center_window(window.root, width, height)
+        except IndexError:
+            window = win_class()
+            center_window(window.root, width, height)
     print(window.root.winfo_geometry())
     print(window.root.winfo_screenwidth())
