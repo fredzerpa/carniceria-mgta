@@ -216,7 +216,7 @@ class MainSystem:
             self.root.destroy()
 
     def print_purchase(self):
-        show_receipt()
+        show_receipt(self)
 
     def select_product(self, prod_dict):
         show_product(self, prod_dict)

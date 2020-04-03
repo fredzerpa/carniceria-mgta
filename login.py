@@ -47,7 +47,8 @@ class LoginSystem:
 
         # Forgot Username
         Label(login_frame, text="¿Olvidó la contraseña?").place(x=7, y=265)
-        Button(login_frame, text="Click aqui", bd=0, fg="Blue", activeforeground="Purple").place(x=130, y=265)
+        Button(login_frame, text="Click aqui", bd=0, fg="Blue", activeforeground="Purple", command=self.forgot_user)\
+            .place(x=130, y=265)
 
     def login(self):
         user_exists = False
@@ -69,6 +70,8 @@ class LoginSystem:
             res = messagebox.showerror("Wrong User/Password", "Usuario y/o Clave Erronea.")
             if res: self.root.focus()
 
+    def forgot_user(self):
+        messagebox.showinfo("User Forgot", "Busque en el path ./records/accounts.txt")
 
 root = Tk()
 login_window = LoginSystem(root)
