@@ -1,12 +1,18 @@
 from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
-from functions import open_window, center_window
+from functions import center_window
 from receipt import Receipt, show_receipt
+from product_box import Product, show_product
 
 
 def show_main(name, job, prev_win):
-    open_window(MainSystem, 1280, 800, name, job, prev_win)
+    global window
+    try:
+        if window.root.state() == "normal": window.root.focus()
+    except:
+        window = MainSystem(name, job, prev_win)
+        center_window(window.root, 1280, 800)
 
 
 class MainSystem:
@@ -20,6 +26,8 @@ class MainSystem:
 
         self.receipt = Receipt
 
+        self.product_box = Product
+
         # User
         self.name = name
         self.job = job
@@ -31,49 +39,49 @@ class MainSystem:
                 "name": "Baby Back Ribs",
                 "price": 3,
                 "image": PhotoImage(file=r"./images/products/ribs.png").subsample(4, 4),
-                "stock": 20
+                "stock": 100
             },
             "groundBeef": {
                 "name": "Carne Molida",
                 "price": 2.5,
                 "image": PhotoImage(file=r"./images/products/carne-molida.png").subsample(4, 4),
-                "stock": 20
+                "stock": 100
             },
             "chicken": {
                 "name": "Muslo de Pollo",
                 "price": 1.5,
                 "image": PhotoImage(file=r"./images/products/muslo.png").subsample(4, 4),
-                "stock": 20
+                "stock": 100
             },
             "steak": {
                 "name": "Bistec",
                 "price": 3.5,
                 "image": PhotoImage(file=r"./images/products/bistec.png").subsample(4, 4),
-                "stock": 20
+                "stock": 100
             },
             "chorizo": {
                 "name": "Chorizo",
                 "price": 10,
                 "image": PhotoImage(file=r"./images/products/chorizo.png").subsample(4, 4),
-                "stock": 20
+                "stock": 100
             },
             "bacon": {
                 "name": "Tocineta",
                 "price": 5,
                 "image": PhotoImage(file=r"./images/products/tocineta.png").subsample(4, 4),
-                "stock": 20
+                "stock": 100
             },
             "meatRoast": {
                 "name": "Carne para Mechar",
                 "price": 2,
                 "image": PhotoImage(file=r"./images/products/mechada.png").subsample(4, 4),
-                "stock": 20
+                "stock": 100
             },
             "porkLeg": {
                 "name": "Pernil",
                 "price": 3.5,
                 "image": PhotoImage(file=r"./images/products/pernil.png").subsample(4, 4),
-                "stock": 20
+                "stock": 100
             },
             "cheese": {
                 "name": "Queso Blanco",
@@ -96,21 +104,29 @@ class MainSystem:
                                    width=950, height=550, padx=10, pady=10)
         self.working_frame.pack(pady=25, padx=25)
 
-        Button(self.working_frame, image=self.products["ribs"]["image"], activebackground="#ccc", command=lambda: self.selected_product("ribs")) \
+        Button(self.working_frame, image=self.products["ribs"]["image"], activebackground="#ccc",
+               command=lambda: self.selected_product(self.products["ribs"])) \
             .place(x=0, y=0)
-        Button(self.working_frame, image=self.products["groundBeef"]["image"], activebackground="#ccc") \
+        Button(self.working_frame, image=self.products["groundBeef"]["image"], activebackground="#ccc",
+               command=lambda: self.selected_product(self.products["groundBeef"])) \
             .place(x=150, y=0)
-        Button(self.working_frame, image=self.products["chicken"]["image"], activebackground="#ccc") \
+        Button(self.working_frame, image=self.products["chicken"]["image"], activebackground="#ccc",
+               command=lambda: self.selected_product(self.products["chicken"])) \
             .place(x=300, y=0)
-        Button(self.working_frame, image=self.products["steak"]["image"], activebackground="#ccc") \
+        Button(self.working_frame, image=self.products["steak"]["image"], activebackground="#ccc",
+               command=lambda: self.selected_product(self.products["steak"])) \
             .place(x=450, y=0)
-        Button(self.working_frame, image=self.products["chorizo"]["image"], activebackground="#ccc") \
+        Button(self.working_frame, image=self.products["chorizo"]["image"], activebackground="#ccc",
+               command=lambda: self.selected_product(self.products["chorizo"])) \
             .place(x=600, y=0)
-        Button(self.working_frame, image=self.products["bacon"]["image"], activebackground="#ccc") \
+        Button(self.working_frame, image=self.products["bacon"]["image"], activebackground="#ccc",
+               command=lambda: self.selected_product(self.products["bacon"])) \
             .place(x=750, y=0)
-        Button(self.working_frame, image=self.products["meatRoast"]["image"], activebackground="#ccc") \
+        Button(self.working_frame, image=self.products["meatRoast"]["image"], activebackground="#ccc",
+               command=lambda: self.selected_product(self.products["meatRoast"])) \
             .place(x=0, y=150)
-        Button(self.working_frame, image=self.products["porkLeg"]["image"], activebackground="#ccc") \
+        Button(self.working_frame, image=self.products["porkLeg"]["image"], activebackground="#ccc",
+               command=lambda: self.selected_product(self.products["porkLeg"])) \
             .place(x=150, y=150)
         Button(self.working_frame, image=self.products["cheese"]["image"], state=DISABLED, bg="#808080") \
             .place(x=300, y=150)
@@ -121,7 +137,8 @@ class MainSystem:
         self.menu_frame = Frame(self.root, bd=2, relief=GROOVE, width=278)
         self.menu_frame.grid(row=0, column=3, rowspan=2, sticky=N + S)
 
-        Label(self.menu_frame, text=f"Encargado:  {self.name.upper()}", font=("Calibri", 14), wraplength=200).place(x=30, y=50)
+        Label(self.menu_frame, text=f"Encargado:  {self.name.upper()}", font=("Calibri", 14), wraplength=200).place(
+            x=30, y=50)
 
         self.data_frame = Frame(self.menu_frame, bg="white", relief=RIDGE, bd=3)
         self.data_frame.place(x=30, y=100)
@@ -133,20 +150,25 @@ class MainSystem:
         self.list_items = Listbox(self.data_frame, yscrollcommand=scrollbar_products.set, width=30, height=30)
         self.list_items.pack(side=LEFT, fill=BOTH)
 
-
         scrollbar_products.config(command=self.list_items.yview)
 
         # SubTotal Label
         Label(self.menu_frame, text=f"Sub-Total: ", font=("Calibri", 12, "bold")) \
             .place(x=30, y=600)
+        self.subtotal_value = 0
+        self.subtotal_input = Label(self.menu_frame, text=f"0.00 $", font=("Calibri", 12))
+        self.subtotal_input.place(x=100, y=600)
         # IVA Label
         Label(self.menu_frame, text=f"I.V.A: ", font=("Calibri", 11, "bold")) \
             .place(x=30, y=630)
+        Label(self.menu_frame, text=f"12%", font=("Calibri", 11)) \
+            .place(x=70, y=630)
         # Total Label
-        Label(self.menu_frame, text=f"Total a Pagar: ".upper(), fg="red", font=("Calibri", 14, "bold")) \
-            .place(x=30, y=660)
+        self.total_input = Label(self.menu_frame, text=f"Total a Pagar: ".upper(), fg="red",
+                                 font=("Calibri", 14, "bold"))
+        self.total_input.place(x=30, y=660)
 
-        self.total_purchase = Label(self.menu_frame, text=f"2225,00 $", font=("Calibri",  14, "bold"), fg="green")
+        self.total_purchase = Label(self.menu_frame, text=f"2225,00 $", font=("Calibri", 14, "bold"), fg="green")
         self.total_purchase.place(x=170, y=660)
 
         Button(self.menu_frame, text="Log Out", width=10, height=2, command=self.logout) \
@@ -178,7 +200,20 @@ class MainSystem:
         self.root.destroy()
 
     def print_purchase(self):
-        center_window(self.receipt().root, 350, 500)
+        show_receipt()
 
-    def selected_product(self, prod_name):
-        self.terminal_data.insert(END, f"{self.name.upper()} ~ Selected {self.products[prod_name]['name']}")
+    def selected_product(self, prod_dict):
+        show_product(self, prod_dict)
+        self.terminal_data.insert(END, f"{self.name.upper()} ~ Selected {prod_dict['name']}")
+
+    def set_subtotal(self, add_amount):
+        self.subtotal_value = self.subtotal_value + add_amount
+        self.subtotal_input.destroy()
+        self.subtotal_input = Label(self.menu_frame, text=f"{self.subtotal_value} $", font=("Calibri", 12))
+        self.subtotal_input.place(x=100, y=600)
+
+    def set_total(self, add_amount):
+        self.total_value = self.subtotal_value + add_amount
+        self.totat_input.destroy()
+        self.totat_input = Label(self.menu_frame, text=f"{self.total_value} $", font=("Calibri", 12))
+        self.totat_input.place(x=100, y=600)

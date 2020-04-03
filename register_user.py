@@ -1,11 +1,16 @@
 from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
-from functions import open_window
+from functions import center_window
 
 
 def show_register():
-    open_window(RegisterUser, 300, 400)
+    global window
+    try:
+        if window.root.state() == "normal": window.root.focus()
+    except:
+        window = RegisterUser()
+        center_window(window.root, 300, 400)
 
 
 class RegisterUser:

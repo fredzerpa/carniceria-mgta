@@ -1,10 +1,15 @@
 from tkinter import *
 from PIL import ImageTk, Image
-from functions import open_window, center_window
+from functions import center_window
 
 
 def show_receipt():
-    open_window(Receipt, 350, 500)
+    global window
+    try:
+        if window.root.state() == "normal": window.root.focus()
+    except:
+        window = Receipt()
+        center_window(window.root, 300, 500)
 
 
 class Receipt:
