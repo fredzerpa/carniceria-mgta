@@ -1,19 +1,18 @@
 from tkinter import *
 from PIL import ImageTk, Image
-from functions import open_window
+from functions import open_window, center_window
 
 
-def show_receipt(main_win, ):
-    open_window(Receipt, 350, 500, main_win)
+def show_receipt():
+    open_window(Receipt, 350, 500)
 
 
 class Receipt:
-    def __init__(self, main_win):
-        self.root = Toplevel(main_win, bg="white")
+    def __init__(self):
+        self.root = Toplevel(bg="white")
         self.root.title("Receipt - Carniceria Margarita")
         self.root.iconbitmap("./images/favicon.ico")
         self.root.resizable(False, False)
-        self.root.geometry("350x500")
         self.root.focus()
 
         # Images
@@ -50,10 +49,5 @@ class Receipt:
         self.re_password = Entry(self.root, width=30, bd=3, relief=GROOVE)
         self.re_password.place(x=55, y=280)
 
-        # Cancel Button
-        Button(self.root, text="Cancelar", width=10, command=self.root.destroy).place(x=60, y=330)
 
-        # Register Button
-        Button(self.root, text="Registrar", width=10, bg="#bbbcbd", activebackground="#8c9196", command=self.register
-               ).place(x=155, y=330)
 
