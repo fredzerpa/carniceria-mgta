@@ -3,24 +3,25 @@ from PIL import ImageTk, Image
 from functions import center_window
 
 
-def show_product(prev_win, prod_dict):
+def show_product(prev_class, prod_dict):
     global window
     try:
         if window.root.state() == "normal": window.root.focus()
     except:
-        window = Product(prev_win, prod_dict)
+        prev_class.terminal_data.insert(END, f"{prev_class.name.upper()} ~ Selected {prod_dict['name']}")
+        window = Product(prev_class, prod_dict)
         center_window(window.root, 400, 300)
 
 
 class Product:
-    def __init__(self, previous_window, product_dictionary):
+    def __init__(self, previous_class, product_dictionary):
         self.root = Toplevel(bg="white")
         self.root.title("Product Box - Carniceria Margarita")
         self.root.iconbitmap("./images/favicon.ico")
         self.root.resizable(False, False)
         self.root.focus()
 
-        self.main_window = previous_window
+        self.main_class = previous_class
         # Selected Product
         self.product = product_dictionary
 
@@ -49,25 +50,26 @@ class Product:
 
     # Cancel Box
     def cancel_product_box(self):
-        self.main_window.terminal_data.insert(END, f"{self.main_window.name.upper()} ~ "
+        self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ "
                                                    f"Cancelled {self.product['name']}")
-        self.main_window.terminal_data.see(END)
+        self.main_class.terminal_data.see(END)
         self.root.destroy()
 
     # Set Price
     def set_product_price(self, product_price, product_quantity):
         product_subprice = product_price * (product_quantity / 1000)
         product_subprice = float("{:.2f}".format(round(product_subprice, 2)))
-        self.main_window.list_items.insert(END, f"{self.product['name']}")
-        self.main_window.list_items.insert(END, f"{product_price}$ x {product_quantity / 1000} Kg")
-        self.main_window.list_items.insert(END,  f"{product_subprice} $")
-        self.main_window.set_subtotal(product_subprice)
-        self.main_window.set_total(self.main_window.subtotal_value, 12)
-        self.main_window.terminal_data.insert(END, f"{self.main_window.name.upper()} ~ "
+        self.main_class.list_items.insert(END, f"{self.product['name']}")
+        self.main_class.list_items.insert(END, f"{product_price}$ x {product_quantity / 1000} Kg")
+        self.main_class.list_items.insert(END,  f"{product_subprice} $")
+        self.main_class.list_items.insert(END, "")
+        self.main_class.set_subtotal(product_subprice)
+        self.main_class.set_total(self.main_class.subtotal_value, 12)
+        self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ "
                                                    f"Selected {self.product['name']} => "
                                                    f"{product_price}$ x {product_quantity/1000}Kg = "
                                                    f"{product_subprice}$")
-        self.main_window.terminal_data.see(END)
+        self.main_class.terminal_data.see(END)
         self.root.destroy()
 
     # Validate the Entry is INT

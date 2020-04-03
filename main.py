@@ -4,6 +4,7 @@ from tkinter import messagebox
 from functions import center_window
 from receipt import Receipt, show_receipt
 from product_box import Product, show_product
+from delete_box import show_delete_box
 
 
 def show_main(name, job, prev_win):
@@ -142,19 +143,23 @@ class MainSystem:
             x=30, y=30)
 
         Button(self.menu_frame, text=f"Borrar producto", font=("Calibri", 10), fg="blue", bd=0,
-               activeforeground="purple") \
+               activeforeground="purple", command=lambda: show_delete_box(self)) \
             .place(x=120, y=80)
 
         self.data_frame = Frame(self.menu_frame, bg="white", relief=RIDGE, bd=3)
         self.data_frame.place(x=30, y=100)
 
+        # Scrollbar
         scrollbar_products = Scrollbar(self.data_frame)
         scrollbar_products.pack(side=RIGHT, fill=Y)
 
         # List Products Selected
-        self.list_items = Listbox(self.data_frame, yscrollcommand=scrollbar_products.set, width=30, height=30)
+        self.list_items = Listbox(self.data_frame, yscrollcommand=scrollbar_products.set, width=23, height=27,
+                                  selectbackground="white", selectforeground="black",
+                                  activestyle=NONE, font=("Sans-serif", 11))
         self.list_items.pack(side=LEFT, fill=BOTH)
 
+        # Inserting Scrollbar with Listbox
         scrollbar_products.config(command=self.list_items.yview)
 
         # SubTotal Label
@@ -215,7 +220,6 @@ class MainSystem:
 
     def select_product(self, prod_dict):
         show_product(self, prod_dict)
-        self.terminal_data.insert(END, f"{self.name.upper()} ~ Selected {prod_dict['name']}")
         self.terminal_data.see(END)
 
     def set_subtotal(self, add_amount):
