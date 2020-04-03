@@ -142,7 +142,7 @@ class MainSystem:
             x=30, y=30)
 
         Button(self.menu_frame, text=f"Borrar producto", font=("Calibri", 10), fg="blue", bd=0,
-               activeforeground="purple" )\
+               activeforeground="purple") \
             .place(x=120, y=80)
 
         self.data_frame = Frame(self.menu_frame, bg="white", relief=RIDGE, bd=3)
@@ -170,7 +170,7 @@ class MainSystem:
             .place(x=70, y=630)
         # Total Label
         self.total_value = 0
-        Label(self.menu_frame, text=f"Total a Pagar: ".upper(), fg="red", font=("Calibri", 14, "bold"))\
+        Label(self.menu_frame, text=f"Total a Pagar: ".upper(), fg="red", font=("Calibri", 14, "bold")) \
             .place(x=30, y=660)
 
         self.total_input = Label(self.menu_frame, text=f"0.00 $", font=("Calibri", 14, "bold"), fg="green")
@@ -216,6 +216,7 @@ class MainSystem:
     def select_product(self, prod_dict):
         show_product(self, prod_dict)
         self.terminal_data.insert(END, f"{self.name.upper()} ~ Selected {prod_dict['name']}")
+        self.terminal_data.see(END)
 
     def set_subtotal(self, add_amount):
         self.subtotal_value = self.subtotal_value + add_amount

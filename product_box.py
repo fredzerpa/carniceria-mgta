@@ -51,6 +51,7 @@ class Product:
     def cancel_product_box(self):
         self.main_window.terminal_data.insert(END, f"{self.main_window.name.upper()} ~ "
                                                    f"Cancelled {self.product['name']}")
+        self.main_window.terminal_data.see(END)
         self.root.destroy()
 
     # Set Price
@@ -63,7 +64,10 @@ class Product:
         self.main_window.set_subtotal(product_subprice)
         self.main_window.set_total(self.main_window.subtotal_value, 12)
         self.main_window.terminal_data.insert(END, f"{self.main_window.name.upper()} ~ "
-                                                   f"Selected {self.product['name']} x {product_subprice}")
+                                                   f"Selected {self.product['name']} => "
+                                                   f"{product_price}$ x {product_quantity/1000}Kg = "
+                                                   f"{product_subprice}$")
+        self.main_window.terminal_data.see(END)
         self.root.destroy()
 
     # Validate the Entry is INT
