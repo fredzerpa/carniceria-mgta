@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter import simpledialog
 from functions import center_window
 
 
@@ -8,9 +9,33 @@ def show_delete_box(prev_class):
     try:
         if window.root.state() == "normal": window.root.focus()
     except:
-        window = DeleteBox(prev_class)
         prev_class.terminal_data.insert(END, f"{prev_class.name.upper()} ~ Opening Deleting Product Box")
-        center_window(window.root, 300, 500)
+        prev_class.terminal_data.see(END)
+        response = simpledialog.askstring("ADMIN Permission", "Por favor introduzca una clave ADMIN para continuar.",
+                                          show="*")
+        if response is not None:
+            is_admin = False
+            with open("./records/accounts.txt") as file:
+                for account in file:
+                    data_list = account.split("||")
+                    username = data_list[0].strip()
+                    password = data_list[1].strip()
+                    job = data_list[2].strip()
+                    if response == password:
+                        is_admin = True
+                        break
+            if is_admin:
+                window = DeleteBox(prev_class)
+                prev_class.terminal_data.insert(END, f"[{username.upper()} Permission Granted]")
+                prev_class.terminal_data.see(END)
+                center_window(window.root, 300, 500)
+            else:
+                messagebox.showerror("Error no access", "Lo siento pero la clave no coincide con la de un ADMIN")
+                prev_class.terminal_data.insert(END, f"[Access Denied]")
+                prev_class.terminal_data.see(END)
+        else:
+            prev_class.terminal_data.insert(END, "[Access Denied]")
+            prev_class.terminal_data.see(END)
 
 
 class DeleteBox:
@@ -38,7 +63,7 @@ class DeleteBox:
         scrollbar_products.pack(side=RIGHT, fill=Y)
 
         # List Products Selected
-        self.listbox_products = Listbox(self.data_frame, yscrollcommand=scrollbar_products.set, width=26, height=15,
+        self.listbox_products = Listbox(self.data_frame, yscrollcommand=scrollbar_products.set, width=27, height=18,
                                         cursor="hand2", selectbackground="#ccc", selectforeground="black",
                                         font=("Sans-serif", 12))
         for product in self.list_purchase_names:
@@ -49,7 +74,14 @@ class DeleteBox:
         # Inserting Scrollbar with Listbox
         scrollbar_products.config(command=self.listbox_products.yview)
 
-
+        # Instructions
+        Label(self.root, text="Instrucciones:", font=("Sans-serif", 12), bg="white")\
+            .place(x=15, y=410)
+        Label(self.root, text="1. Hacer doble click sobre el nombre del producto a eliminar",
+              font=("Sans-serif", 10), bg="white", wraplength=250)\
+            .place(x=15, y=435)
+        Label(self.root, text="2. Cerrar esta ventana al finalizar.", font=("Sans-serif", 10), bg="white")\
+            .place(x=15, y=455)
 
     # Validate the Entry is INT
     def validate_int(self, P):
@@ -60,13 +92,14 @@ class DeleteBox:
 
     def close(self):
         self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ Closing Deleting Product Box")
+        self.main_class.terminal_data.see(END)
         self.root.destroy()
 
     def deleting_product_on_list(self, event):
-        response = messagebox.askyesno("Confirm Action", f"Desea eleminar {self.list_purchase_names[self.listbox_products.curselection()[0]]}")
+        selected_product = self.listbox_products.curselection()[0]
+        response = messagebox.askyesno("Confirm Action", f"Desea eleminar {self.list_purchase_names[selected_product]}")
         if response:
-            self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ Deleted Product")
-            self.root.destroy()
-
-    def select_product_listbox(self, index):
-        self.listbox_products.activate(index)
+            self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ Deleted "
+                                                      f"{self.list_purchase_names[selected_product]}, "
+                                                      f"on line {(selected_product * 4) + 1}")
+            self.main_class.terminal_data.see(END)
