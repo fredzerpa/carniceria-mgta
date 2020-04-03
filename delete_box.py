@@ -81,7 +81,7 @@ class DeleteBox:
         # Instructions
         Label(self.root, text="Instrucciones:", font=("Sans-serif", 12), bg="white")\
             .place(x=15, y=410)
-        Label(self.root, text="1. Hacer doble click sobre el nombre del producto a eliminar",
+        Label(self.root, text="1. Hacer doble click sobre el nombre.",
               font=("Sans-serif", 10), bg="white", wraplength=250)\
             .place(x=15, y=435)
         Label(self.root, text="2. Cerrar esta ventana al finalizar.", font=("Sans-serif", 10), bg="white")\

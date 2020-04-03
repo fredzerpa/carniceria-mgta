@@ -69,7 +69,7 @@ class Receipt:
 
     def print_bill(self):
         with open("./records/receipts.txt", "a") as file:
-            file.write("    RECIBO")
+            file.write("===== RECIBO ====\n")
             for index in range(0, len(self.receipt), 4):
                 file.write(f"{self.receipt[index]} || {self.receipt[index + 1]} || {self.receipt[index + 2]}\n")
             file.write("\n")

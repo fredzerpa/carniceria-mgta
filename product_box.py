@@ -45,7 +45,7 @@ class Product:
             .place(x=75, y=225)
 
         Button(self.root, text="Aceptar", width=15, height=2, bg="#bbbcbd", activebackground="#8c9196",
-               command=lambda: self.set_product_price(self.product["price"], int(self.quantity.get()))) \
+               command=lambda: self.set_product_price(self.product["price"], self.quantity.get())) \
             .place(x=225, y=225)
 
     # Cancel Box
@@ -57,19 +57,24 @@ class Product:
 
     # Set Price
     def set_product_price(self, product_price, product_quantity):
-        product_subprice = product_price * (product_quantity / 1000)
-        product_subprice = float("{:.2f}".format(round(product_subprice, 2)))
-        self.main_class.list_items.insert(END, f"{self.product['name']}")
-        self.main_class.list_items.insert(END, f"{product_price}$ x {product_quantity / 1000} Kg")
-        self.main_class.list_items.insert(END, f"{product_subprice} $")
-        self.main_class.list_items.insert(END, "")
-        self.main_class.set_subtotal(product_subprice)
-        self.main_class.set_total(self.main_class.subtotal_value, 12)
-        self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ "
-                                                  f"Selected {self.product['name']} => "
-                                                  f"{product_price}$ x {product_quantity / 1000}Kg = "
-                                                  f"{product_subprice}$, on line "
-                                                  f"{self.main_class.list_items.size() - 3}")
+        try:
+            product_kg = int(product_quantity) / 1000
+            product_subprice = product_price * (product_kg)
+            product_subprice = float("{:.2f}".format(round(product_subprice, 2)))
+            self.main_class.list_items.insert(END, f"{self.product['name']}")
+            self.main_class.list_items.insert(END, f"{product_price}$ x {product_kg} Kg")
+            self.main_class.list_items.insert(END, f"{product_subprice} $")
+            self.main_class.list_items.insert(END, "")
+            self.main_class.set_subtotal(product_subprice)
+            self.main_class.set_total(self.main_class.subtotal_value, 12)
+            self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ "
+                                                      f"Selected {self.product['name']} => "
+                                                      f"{product_price}$ x {product_kg}Kg = "
+                                                      f"{product_subprice}$, on line "
+                                                      f"{self.main_class.list_items.size() - 3}")
+        except ValueError:
+            self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ "
+                                                      f"No input")
         self.main_class.terminal_data.see(END)
         self.root.destroy()
 
