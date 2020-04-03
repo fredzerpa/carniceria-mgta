@@ -40,21 +40,31 @@ class Product:
         Label(self.root, text="Gramos", font=("Sans-serif", 14), bg="white").place(x=300, y=160)
 
         # Continue/Cancel Button
-        Button(self.root, text="Cancel", width=15, height=2, command=self.root.destroy) \
+        Button(self.root, text="Cancel", width=15, height=2, command=self.cancel_product_box) \
             .place(x=75, y=225)
 
         Button(self.root, text="Aceptar", width=15, height=2, bg="#bbbcbd", activebackground="#8c9196",
                command=lambda: self.set_product_price(self.product["price"], int(self.quantity.get()))) \
             .place(x=225, y=225)
 
+    # Cancel Box
+    def cancel_product_box(self):
+        self.main_window.terminal_data.insert(END, f"{self.main_window.name.upper()} ~ "
+                                                   f"Cancelled {self.product['name']}")
+        self.root.destroy()
+
     # Set Price
     def set_product_price(self, product_price, product_quantity):
         product_subprice = product_price * (product_quantity / 1000)
         product_subprice = float("{:.2f}".format(round(product_subprice, 2)))
         self.main_window.list_items.insert(END, f"{self.product['name']}")
-        self.main_window.list_items.insert(END, f"{product_price}$ x {product_quantity} gramos.")
+        self.main_window.list_items.insert(END, f"{product_price}$ x {product_quantity / 1000} Kg")
         self.main_window.list_items.insert(END,  f"{product_subprice} $")
         self.main_window.set_subtotal(product_subprice)
+        self.main_window.set_total(self.main_window.subtotal_value, 12)
+        self.main_window.terminal_data.insert(END, f"{self.main_window.name.upper()} ~ "
+                                                   f"Selected {self.product['name']} x {product_subprice}")
+        self.root.destroy()
 
     # Validate the Entry is INT
     def validate_float(self, action, index, value_if_allowed,

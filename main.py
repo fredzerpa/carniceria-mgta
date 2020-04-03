@@ -21,6 +21,7 @@ class MainSystem:
         self.root.title(f"Bienvenido {name.capitalize()}, Carniceria Margarita")
         self.root.iconbitmap("./images/favicon.ico")
         self.root.resizable(False, False)
+        self.root.focus()
 
         self.login_win = prev_win
 
@@ -105,28 +106,28 @@ class MainSystem:
         self.working_frame.pack(pady=25, padx=25)
 
         Button(self.working_frame, image=self.products["ribs"]["image"], activebackground="#ccc",
-               command=lambda: self.selected_product(self.products["ribs"])) \
+               command=lambda: self.select_product(self.products["ribs"])) \
             .place(x=0, y=0)
         Button(self.working_frame, image=self.products["groundBeef"]["image"], activebackground="#ccc",
-               command=lambda: self.selected_product(self.products["groundBeef"])) \
+               command=lambda: self.select_product(self.products["groundBeef"])) \
             .place(x=150, y=0)
         Button(self.working_frame, image=self.products["chicken"]["image"], activebackground="#ccc",
-               command=lambda: self.selected_product(self.products["chicken"])) \
+               command=lambda: self.select_product(self.products["chicken"])) \
             .place(x=300, y=0)
         Button(self.working_frame, image=self.products["steak"]["image"], activebackground="#ccc",
-               command=lambda: self.selected_product(self.products["steak"])) \
+               command=lambda: self.select_product(self.products["steak"])) \
             .place(x=450, y=0)
         Button(self.working_frame, image=self.products["chorizo"]["image"], activebackground="#ccc",
-               command=lambda: self.selected_product(self.products["chorizo"])) \
+               command=lambda: self.select_product(self.products["chorizo"])) \
             .place(x=600, y=0)
         Button(self.working_frame, image=self.products["bacon"]["image"], activebackground="#ccc",
-               command=lambda: self.selected_product(self.products["bacon"])) \
+               command=lambda: self.select_product(self.products["bacon"])) \
             .place(x=750, y=0)
         Button(self.working_frame, image=self.products["meatRoast"]["image"], activebackground="#ccc",
-               command=lambda: self.selected_product(self.products["meatRoast"])) \
+               command=lambda: self.select_product(self.products["meatRoast"])) \
             .place(x=0, y=150)
         Button(self.working_frame, image=self.products["porkLeg"]["image"], activebackground="#ccc",
-               command=lambda: self.selected_product(self.products["porkLeg"])) \
+               command=lambda: self.select_product(self.products["porkLeg"])) \
             .place(x=150, y=150)
         Button(self.working_frame, image=self.products["cheese"]["image"], state=DISABLED, bg="#808080") \
             .place(x=300, y=150)
@@ -138,7 +139,11 @@ class MainSystem:
         self.menu_frame.grid(row=0, column=3, rowspan=2, sticky=N + S)
 
         Label(self.menu_frame, text=f"Encargado:  {self.name.upper()}", font=("Calibri", 14), wraplength=200).place(
-            x=30, y=50)
+            x=30, y=30)
+
+        Button(self.menu_frame, text=f"Borrar producto", font=("Calibri", 10), fg="blue", bd=0,
+               activeforeground="purple" )\
+            .place(x=120, y=80)
 
         self.data_frame = Frame(self.menu_frame, bg="white", relief=RIDGE, bd=3)
         self.data_frame.place(x=30, y=100)
@@ -164,12 +169,12 @@ class MainSystem:
         Label(self.menu_frame, text=f"12%", font=("Calibri", 11)) \
             .place(x=70, y=630)
         # Total Label
-        self.total_input = Label(self.menu_frame, text=f"Total a Pagar: ".upper(), fg="red",
-                                 font=("Calibri", 14, "bold"))
-        self.total_input.place(x=30, y=660)
+        self.total_value = 0
+        Label(self.menu_frame, text=f"Total a Pagar: ".upper(), fg="red", font=("Calibri", 14, "bold"))\
+            .place(x=30, y=660)
 
-        self.total_purchase = Label(self.menu_frame, text=f"2225,00 $", font=("Calibri", 14, "bold"), fg="green")
-        self.total_purchase.place(x=170, y=660)
+        self.total_input = Label(self.menu_frame, text=f"0.00 $", font=("Calibri", 14, "bold"), fg="green")
+        self.total_input.place(x=170, y=660)
 
         Button(self.menu_frame, text="Log Out", width=10, height=2, command=self.logout) \
             .place(x=175, y=725)
@@ -196,24 +201,33 @@ class MainSystem:
         scrollbar_terminal.config(command=self.terminal_data.yview)
 
     def logout(self):
-        self.login_win.deiconify()
-        self.root.destroy()
+        if self.list_items.size() > 0:
+            response = messagebox.askyesno("Pending Bill", "Quedan productos por facturar, desea continuar?")
+            if response:
+                self.login_win.deiconify()
+                self.root.destroy()
+        else:
+            self.login_win.deiconify()
+            self.root.destroy()
 
     def print_purchase(self):
         show_receipt()
 
-    def selected_product(self, prod_dict):
+    def select_product(self, prod_dict):
         show_product(self, prod_dict)
         self.terminal_data.insert(END, f"{self.name.upper()} ~ Selected {prod_dict['name']}")
 
     def set_subtotal(self, add_amount):
         self.subtotal_value = self.subtotal_value + add_amount
+        self.subtotal_value = float("{:.2f}".format(round(self.subtotal_value, 2)))
         self.subtotal_input.destroy()
         self.subtotal_input = Label(self.menu_frame, text=f"{self.subtotal_value} $", font=("Calibri", 12))
         self.subtotal_input.place(x=100, y=600)
 
-    def set_total(self, add_amount):
-        self.total_value = self.subtotal_value + add_amount
-        self.totat_input.destroy()
-        self.totat_input = Label(self.menu_frame, text=f"{self.total_value} $", font=("Calibri", 12))
-        self.totat_input.place(x=100, y=600)
+    def set_total(self, sub_total, IVA_porcentage):
+        self.total_value = sub_total + (sub_total * (IVA_porcentage / 100))
+        self.total_value = float("{:.2f}".format(round(self.total_value, 2)))
+        self.total_input.destroy()
+        self.total_input = Label(self.menu_frame, text=f"{self.total_value} $",
+                                 font=("Calibri", 14, "bold"), fg="green")
+        self.total_input.place(x=170, y=660)
