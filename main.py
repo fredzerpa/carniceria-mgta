@@ -222,8 +222,11 @@ class MainSystem:
         show_product(self, prod_dict)
         self.terminal_data.see(END)
 
-    def set_subtotal(self, add_amount):
-        self.subtotal_value = self.subtotal_value + add_amount
+    def set_subtotal(self, amount, operation="add"):
+        if operation == "add":
+            self.subtotal_value = self.subtotal_value + amount
+        elif operation == "subtract":
+            self.subtotal_value = self.subtotal_value - amount
         self.subtotal_value = float("{:.2f}".format(round(self.subtotal_value, 2)))
         self.subtotal_input.destroy()
         self.subtotal_input = Label(self.menu_frame, text=f"{self.subtotal_value} $", font=("Calibri", 12))

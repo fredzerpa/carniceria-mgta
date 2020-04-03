@@ -10,31 +10,35 @@ def show_delete_box(prev_class):
         if window.root.state() == "normal": window.root.focus()
     except:
         prev_class.terminal_data.insert(END, f"{prev_class.name.upper()} ~ Opening Deleting Product Box")
-        prev_class.terminal_data.see(END)
-        response = simpledialog.askstring("ADMIN Permission", "Por favor introduzca una clave ADMIN para continuar.",
-                                          show="*")
-        if response is not None:
-            is_admin = False
-            with open("./records/accounts.txt") as file:
-                for account in file:
-                    data_list = account.split("||")
-                    username = data_list[0].strip()
-                    password = data_list[1].strip()
-                    job = data_list[2].strip()
-                    if response == password:
-                        is_admin = True
-                        break
-            if is_admin:
-                window = DeleteBox(prev_class)
-                prev_class.terminal_data.insert(END, f"[{username.upper()} Permission Granted]")
-                prev_class.terminal_data.see(END)
-                center_window(window.root, 300, 500)
+        if prev_class.list_items.size() > 0:
+            prev_class.terminal_data.see(END)
+            response = simpledialog.askstring("ADMIN Permission", "Por favor introduzca una clave ADMIN para continuar.",
+                                              show="*")
+            if response is not None:
+                is_admin = False
+                with open("./records/accounts.txt") as file:
+                    for account in file:
+                        data_list = account.split("||")
+                        username = data_list[0].strip()
+                        password = data_list[1].strip()
+                        job = data_list[2].strip()
+                        if response == password:
+                            is_admin = True
+                            break
+                if is_admin:
+                    window = DeleteBox(prev_class)
+                    prev_class.terminal_data.insert(END, f"[{username.upper()} Permission Granted]")
+                    prev_class.terminal_data.see(END)
+                    center_window(window.root, 300, 500)
+                else:
+                    messagebox.showerror("Error no access", "Lo siento pero la clave no coincide con la de un ADMIN")
+                    prev_class.terminal_data.insert(END, "[Access Denied]: Password is not from ADMIN")
+                    prev_class.terminal_data.see(END)
             else:
-                messagebox.showerror("Error no access", "Lo siento pero la clave no coincide con la de un ADMIN")
-                prev_class.terminal_data.insert(END, f"[Access Denied]")
+                prev_class.terminal_data.insert(END, "[Access Denied]: No password received")
                 prev_class.terminal_data.see(END)
         else:
-            prev_class.terminal_data.insert(END, "[Access Denied]")
+            prev_class.terminal_data.insert(END, "[Access Denied]: No product selected")
             prev_class.terminal_data.see(END)
 
 
@@ -66,8 +70,8 @@ class DeleteBox:
         self.listbox_products = Listbox(self.data_frame, yscrollcommand=scrollbar_products.set, width=27, height=18,
                                         cursor="hand2", selectbackground="#ccc", selectforeground="black",
                                         font=("Sans-serif", 12))
-        for product in self.list_purchase_names:
-            self.listbox_products.insert(END, f"{self.list_purchase_names.index(product) + 1}. {product}")
+        for index in range(len(self.list_purchase_names)):
+            self.listbox_products.insert(END, f"{index + 1}. {self.list_purchase_names[index]}")
         self.listbox_products.pack(side=LEFT, fill=BOTH)
         self.listbox_products.bind("<Double-Button-1>", self.deleting_product_on_list)
 
@@ -96,10 +100,21 @@ class DeleteBox:
         self.root.destroy()
 
     def deleting_product_on_list(self, event):
-        selected_product = self.listbox_products.curselection()[0]
-        response = messagebox.askyesno("Confirm Action", f"Desea eleminar {self.list_purchase_names[selected_product]}")
+        selected_product_index = self.listbox_products.curselection()[0]
+        item_line_on_bill = (selected_product_index * 4) + 1
+        response = messagebox.askyesno("Confirm Action", f"Desea eleminar "
+                                                         f"{self.list_purchase_names[selected_product_index]}?")
         if response:
+            item_subtotal = float(self.main_class.list_items.get((item_line_on_bill - 1) + 2).replace(" $", ""))
+            self.main_class.set_subtotal(item_subtotal, "subtract")
+
+            self.main_class.set_total(self.main_class.subtotal_value, 12)
+            self.main_class.list_items.delete(item_line_on_bill - 1, (item_line_on_bill - 1) + 3)
+            self.close()
+
             self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ Deleted "
-                                                      f"{self.list_purchase_names[selected_product]}, "
-                                                      f"on line {(selected_product * 4) + 1}")
+                                                      f"{self.list_purchase_names[selected_product_index]} => "
+                                                      f"- {item_subtotal}$, "
+                                                      f"on line {item_line_on_bill}")
             self.main_class.terminal_data.see(END)
+

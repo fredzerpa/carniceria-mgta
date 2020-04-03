@@ -51,7 +51,7 @@ class Product:
     # Cancel Box
     def cancel_product_box(self):
         self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ "
-                                                   f"Cancelled {self.product['name']}")
+                                                  f"Cancelled {self.product['name']}")
         self.main_class.terminal_data.see(END)
         self.root.destroy()
 
@@ -61,14 +61,15 @@ class Product:
         product_subprice = float("{:.2f}".format(round(product_subprice, 2)))
         self.main_class.list_items.insert(END, f"{self.product['name']}")
         self.main_class.list_items.insert(END, f"{product_price}$ x {product_quantity / 1000} Kg")
-        self.main_class.list_items.insert(END,  f"{product_subprice} $")
+        self.main_class.list_items.insert(END, f"{product_subprice} $")
         self.main_class.list_items.insert(END, "")
         self.main_class.set_subtotal(product_subprice)
         self.main_class.set_total(self.main_class.subtotal_value, 12)
         self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ "
-                                                   f"Selected {self.product['name']} => "
-                                                   f"{product_price}$ x {product_quantity/1000}Kg = "
-                                                   f"{product_subprice}$")
+                                                  f"Selected {self.product['name']} => "
+                                                  f"{product_price}$ x {product_quantity / 1000}Kg = "
+                                                  f"{product_subprice}$, on line "
+                                                  f"{self.main_class.list_items.size() - 3}")
         self.main_class.terminal_data.see(END)
         self.root.destroy()
 
