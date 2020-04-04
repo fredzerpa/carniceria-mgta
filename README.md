@@ -26,7 +26,7 @@ Cabe destacar que los aspectos a evaluar serán los siguientes:
 Pillow es el amigable fork, realizado por Alex Clark y Contribuidores. 
 PIL es Python Imaging Library, hecho por Fredrik Lundh y Contribuidores.
 
-Usa el Package Manager [pip](https://pip.pypa.io/en/stable/) para instalar PIL
+Usa el Package Manager [pip](https://pip.pypa.io/en/stable/) para instalar PIL fork ``Pillow``
 
 ![](./images/Pillow.gif)
 
