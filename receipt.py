@@ -1,4 +1,6 @@
 from tkinter import *
+from tkinter import messagebox
+
 from PIL import ImageTk, Image
 
 from functions import center_window
@@ -74,6 +76,7 @@ class Receipt:
                 file.write(f"{self.receipt[index]} || {self.receipt[index + 1]} || {self.receipt[index + 2]}\n")
             file.write("\n")
         self.main_class.list_items.delete(0, END)
+        messagebox.showinfo("Bill Printed", "Se guardado la factua en records/receipts.txt")
         self.main_class.terminal_data.insert(END, "Bill Printed: Data Saved on the file records/receipts.txt")
         self.main_class.terminal_data.see(END)
         self.main_class.root.deiconify()
