@@ -1,4 +1,6 @@
 from tkinter import *
+from tkinter import messagebox
+
 from PIL import ImageTk, Image
 from functions import center_window
 
@@ -55,28 +57,60 @@ class Product:
         self.main_class.terminal_data.see(END)
         self.root.destroy()
 
+    # Still on Stock
+    def is_still_on_stock(self, quantity_req):
+        if self.product["stock"] > quantity_req:
+            return True
+        else:
+            return False
+
     # Set Price
     def set_product_price(self, product_price, product_quantity):
         try:
-            product_kg = int(product_quantity) / 1000
-            product_subprice = product_price * (product_kg)
-            product_subprice = float("{:.2f}".format(round(product_subprice, 2)))
-            self.main_class.list_items.insert(END, f"{self.product['name']}")
-            self.main_class.list_items.insert(END, f"{product_price}$ x {product_kg} Kg")
-            self.main_class.list_items.insert(END, f"{product_subprice} $")
-            self.main_class.list_items.insert(END, "")
-            self.main_class.set_subtotal(product_subprice)
-            self.main_class.set_total(self.main_class.subtotal_value, 12)
-            self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ "
-                                                      f"Selected {self.product['name']} => "
-                                                      f"{product_price}$ x {product_kg}Kg = "
-                                                      f"{product_subprice}$, on line "
-                                                      f"{self.main_class.list_items.size() - 3}")
+            if self.is_still_on_stock(0):  # Still on stock
+                product_kg = float(product_quantity) / 1000
+
+                if self.is_still_on_stock(product_kg):  # Quantity required doesn't exceed the stock
+                    for key in self.main_class.products:
+                        if self.main_class.products[key] == self.product:
+                            self.main_class.products[key]['stock'] = float(
+                                self.main_class.products[key]['stock'] - product_kg
+                            )
+                            self.main_class.products[key]['stock'] = float(
+                                "{:.2f}".format(round(self.main_class.products[key]['stock'], 2)))
+
+                    product_subprice = product_price * product_kg
+                    product_subprice = float("{:.2f}".format(round(product_subprice, 2)))
+                    self.main_class.list_items.insert(END, f"{self.product['name']}")
+                    self.main_class.list_items.insert(END, f"{product_price}$ x {product_kg} Kg")
+                    self.main_class.list_items.insert(END, f"{product_subprice} $")
+                    self.main_class.list_items.insert(END, "")
+                    self.main_class.set_subtotal(product_subprice)
+                    self.main_class.set_total(self.main_class.subtotal_value, 12)
+                    self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ "
+                                                              f"Selected {self.product['name']} => "
+                                                              f"{product_price}$ x {product_kg}Kg = "
+                                                              f"{product_subprice}$, on line "
+                                                              f"{self.main_class.list_items.size() - 3}")
+                    self.root.destroy()
+                else:
+                    messagebox.showwarning("Not enough in stock", f"No hay suficiente {self.product['name']} en el "
+                                                                  f"inventario. \nQueda {self.product['stock']} Kg.")
+                    self.root.focus()
+                    self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ "
+                                                              f"{self.product['name']} not enough in stock. "
+                                                              f"Input {product_kg}Kg - "
+                                                              f"Left {self.product['stock']} Kg.")
+            else:  # Out of Stock
+                messagebox.showwarning("Not in stock", f"{self.product['name']} Agotado.")
+                self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ "
+                                                          f"{self.product['name']} out of stock")
+                self.root.destroy()
         except ValueError:
             self.main_class.terminal_data.insert(END, f"{self.main_class.name.upper()} ~ "
-                                                      f"No input")
+                                                      f"{self.product['name']}: No input")
+            self.root.destroy()
         self.main_class.terminal_data.see(END)
-        self.root.destroy()
 
     # Validate the Entry is INT
     def validate_float(self, action, index, value_if_allowed,
