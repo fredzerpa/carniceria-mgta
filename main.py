@@ -1,7 +1,7 @@
 from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
-from functions import center_window
+from functions import *
 from receipt import Receipt, show_receipt
 from product_box import Product, show_product
 from delete_box import show_delete_box
@@ -18,13 +18,13 @@ def show_main(name, job, prev_win):
 
 class MainSystem:
     def __init__(self, name, job, prev_win):
+        self.login_win = prev_win
         self.root = Toplevel()
         self.root.title(f"Bienvenido {name.capitalize()}, Carniceria Margarita")
         self.root.iconbitmap("./images/favicon.ico")
         self.root.resizable(False, False)
+        self.root.protocol("WM_DELETE_WINDOW", unusual_closing_win)
         self.root.focus()
-
-        self.login_win = prev_win
 
         self.receipt = Receipt
 

@@ -73,7 +73,9 @@ class LoginSystem:
     def forgot_user(self):
         messagebox.showinfo("User Forgot", "Busque en el path ./records/accounts.txt")
 
+
 root = Tk()
 login_window = LoginSystem(root)
 center_window(login_window.root, 824, 404)
+
 root.mainloop()

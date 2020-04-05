@@ -1,3 +1,6 @@
+from tkinter import messagebox
+
+
 def center_window(win, width, height):
     screen_width = win.winfo_screenwidth()
     screen_height = win.winfo_screenheight()
@@ -7,3 +10,7 @@ def center_window(win, width, height):
 
     win.geometry(f"{width}x{height}+{x_cordinate}+{y_cordinate}")
 
+
+def unusual_closing_win():
+    if messagebox.askyesno("Quitting Program", "Desea salir del programa?"):
+        quit()
