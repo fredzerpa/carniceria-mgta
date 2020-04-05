@@ -17,6 +17,7 @@ def show_receipt(prev_class):
         center_window(window.root, 500, 700)
         prev_class.root.withdraw()
 
+
 class Receipt:
     def __init__(self, previous_class):
         self.root = Toplevel(bg="white")
@@ -79,5 +80,15 @@ class Receipt:
         messagebox.showinfo("Bill Printed", "Se guardado la factua en records/receipts.txt")
         self.main_class.terminal_data.insert(END, "Bill Printed: Data Saved on the file records/receipts.txt")
         self.main_class.terminal_data.see(END)
+        self.main_class.subtotal_input.destroy()
+        self.main_class.subtotal_value = 0
+        self.main_class.subtotal_input = Label(self.main_class.menu_frame,
+                                               text=f"{self.main_class.subtotal_value} $", font=("Calibri", 12))
+        self.main_class.subtotal_input.place(x=100, y=600)
+        self.main_class.total_input.destroy()
+        self.main_class.total_value = 0
+        self.main_class.total_input = Label(self.main_class.menu_frame, text=f"{self.main_class.total_value} $",
+                                            font=("Calibri", 14, "bold"), fg="green")
+        self.main_class.total_input.place(x=170, y=660)
         self.main_class.root.deiconify()
         self.root.destroy()
