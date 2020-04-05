@@ -167,7 +167,7 @@ class MainSystem:
             .place(x=30, y=500)
         self.subtotal_value = 0
         self.subtotal_input = Label(self.menu_frame, text=f"0.00 $", font=("Calibri", 12))
-        self.subtotal_input.place(x=100, y=500)
+            self.subtotal_input.place(x=100, y=500)
         # IVA Label
         Label(self.menu_frame, text=f"I.V.A: ", font=("Calibri", 11, "bold")) \
             .place(x=30, y=530)
