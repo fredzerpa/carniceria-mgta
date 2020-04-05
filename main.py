@@ -13,7 +13,7 @@ def show_main(name, job, prev_win):
         if window.root.state() == "normal": window.root.focus()
     except:
         window = MainSystem(name, job, prev_win)
-        center_window(window.root, 1280, 800)
+        center_window(window.root, 1280, 700)
 
 
 class MainSystem:
@@ -103,7 +103,7 @@ class MainSystem:
         self.working_bg.grid(row=0, column=0, columnspan=3)
 
         self.working_frame = Frame(self.working_bg, bd=4, bg="white", relief=RIDGE,
-                                   width=950, height=550, padx=10, pady=10)
+                                   width=950, height=450, padx=10, pady=10)
         self.working_frame.pack(pady=25, padx=25)
 
         Button(self.working_frame, image=self.products["ribs"]["image"], activebackground="#ccc",
@@ -154,7 +154,7 @@ class MainSystem:
         scrollbar_products.pack(side=RIGHT, fill=Y)
 
         # List Products Selected
-        self.list_items = Listbox(self.data_frame, yscrollcommand=scrollbar_products.set, width=23, height=27,
+        self.list_items = Listbox(self.data_frame, yscrollcommand=scrollbar_products.set, width=23, height=20,
                                   selectbackground="white", selectforeground="black",
                                   activestyle=NONE, font=("Sans-serif", 11))
         self.list_items.pack(side=LEFT, fill=BOTH)
@@ -164,29 +164,29 @@ class MainSystem:
 
         # SubTotal Label
         Label(self.menu_frame, text=f"Sub-Total: ", font=("Calibri", 12, "bold")) \
-            .place(x=30, y=600)
+            .place(x=30, y=500)
         self.subtotal_value = 0
         self.subtotal_input = Label(self.menu_frame, text=f"0.00 $", font=("Calibri", 12))
-        self.subtotal_input.place(x=100, y=600)
+        self.subtotal_input.place(x=100, y=500)
         # IVA Label
         Label(self.menu_frame, text=f"I.V.A: ", font=("Calibri", 11, "bold")) \
-            .place(x=30, y=630)
+            .place(x=30, y=530)
         Label(self.menu_frame, text=f"12%", font=("Calibri", 11)) \
-            .place(x=70, y=630)
+            .place(x=70, y=530)
         # Total Label
         self.total_value = 0
         Label(self.menu_frame, text=f"Total a Pagar: ".upper(), fg="red", font=("Calibri", 14, "bold")) \
-            .place(x=30, y=660)
+            .place(x=30, y=560)
 
         self.total_input = Label(self.menu_frame, text=f"0.00 $", font=("Calibri", 14, "bold"), fg="green")
-        self.total_input.place(x=170, y=660)
+        self.total_input.place(x=170, y=560)
 
         Button(self.menu_frame, text="Log Out", width=10, height=2, command=self.logout) \
-            .place(x=175, y=725)
+            .place(x=175, y=625)
 
         Button(self.menu_frame, text="Imprimir", command=self.print_purchase,
                width=15, height=2, bg="#bbbcbd", activebackground="#8c9196") \
-            .place(x=25, y=725)
+            .place(x=25, y=625)
 
         # Terminal
         self.terminal_bg = Frame(self.root, bd=2, bg="#b7b7b7")
