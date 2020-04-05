@@ -58,19 +58,25 @@ class Product:
         self.root.destroy()
 
     # Still on Stock
-    def is_still_on_stock(self, quantity_req):
-        if self.product["stock"] > quantity_req:
-            return True
-        else:
-            return False
+    def is_amount_available_on_stock(self, amount):
+        if amount == 0:  # if any in stock
+            if self.product["stock"] > amount:
+                return True
+            else:
+                return False
+        else:  # if Input is the same as the Stock
+            if self.product["stock"] >= amount:
+                return True
+            else:
+                return False
 
     # Set Price
     def set_product_price(self, product_price, product_quantity):
         try:
-            if self.is_still_on_stock(0):  # Still on stock
+            if self.is_amount_available_on_stock(0):  # Still on stock
                 product_kg = float(product_quantity) / 1000
 
-                if self.is_still_on_stock(product_kg):  # Quantity required doesn't exceed the stock
+                if self.is_amount_available_on_stock(product_kg):  # Quantity required doesn't exceed the stock
                     for key in self.main_class.products:
                         if self.main_class.products[key] == self.product:
                             self.main_class.products[key]['stock'] = float(
