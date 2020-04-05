@@ -1,8 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
-
 from PIL import ImageTk, Image
-
 from functions import center_window
 
 
@@ -77,7 +75,6 @@ class Receipt:
                 file.write(f"{self.receipt[index]} || {self.receipt[index + 1]} || {self.receipt[index + 2]}\n")
             file.write("\n")
         self.main_class.list_items.delete(0, END)
-        messagebox.showinfo("Bill Printed", "Se guardado la factua en records/receipts.txt")
         self.main_class.terminal_data.insert(END, "Bill Printed: Data Saved on the file records/receipts.txt")
         self.main_class.terminal_data.see(END)
         self.main_class.subtotal_input.destroy()
@@ -91,4 +88,6 @@ class Receipt:
                                             font=("Calibri", 14, "bold"), fg="green")
         self.main_class.total_input.place(x=170, y=660)
         self.main_class.root.deiconify()
+        messagebox.showinfo("Bill Printed", "Se guardado la factua en records/receipts.txt")
+
         self.root.destroy()
