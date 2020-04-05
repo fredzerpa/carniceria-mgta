@@ -20,6 +20,7 @@ class Product:
         self.root.title("Product Box - Carniceria Margarita")
         self.root.iconbitmap("./images/favicon.ico")
         self.root.resizable(False, False)
+        self.root.protocol("WM_DELETE_WINDOW", self.cancel_product_box)
         self.root.focus()
 
         self.main_class = previous_class
