@@ -48,12 +48,12 @@ class RegisterUser:
 
         # Password
         Label(self.root, text="Clave", font=("Sans-serif", 12), bg="white").place(x=125, y=190)
-        self.password = Entry(self.root, width=30, bd=3, relief=GROOVE)
+        self.password = Entry(self.root, width=30, bd=3, relief=GROOVE, show="*")
         self.password.place(x=55, y=220)
 
         # Re Password
         Label(self.root, text="Re-Clave", font=("Sans-serif", 12), bg="white").place(x=115, y=250)
-        self.re_password = Entry(self.root, width=30, bd=3, relief=GROOVE)
+        self.re_password = Entry(self.root, width=30, bd=3, relief=GROOVE, show="*")
         self.re_password.place(x=55, y=280)
 
         # Cancel Button
@@ -74,7 +74,16 @@ class RegisterUser:
             res = messagebox.showinfo("Error: Job Selection", "Por favor seleccione un cargo.")
             if res: self.root.focus()
         else:
+            records = open("./records/accounts.txt", "r")
+            for account in records:
+                data_list = account.split("||")
+                username = data_list[0].strip()
+                if self.username.get() == username:
+                    records.close()
+                    messagebox.showerror("Account already Exist", "Este usuario ya existe")
+                    return self.root.focus()
+            records.close()
             with open("./records/accounts.txt", "a") as file:
                 account = f"{self.username.get()} || {self.password.get()} || {self.job.get()}\n"
                 file.write(account)
-            self.root.destroy()
+                self.root.destroy()
