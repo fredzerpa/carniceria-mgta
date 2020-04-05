@@ -167,7 +167,7 @@ class MainSystem:
             .place(x=30, y=500)
         self.subtotal_value = 0
         self.subtotal_input = Label(self.menu_frame, text=f"0.00 $", font=("Calibri", 12))
-            self.subtotal_input.place(x=100, y=500)
+        self.subtotal_input.place(x=100, y=500)
         # IVA Label
         Label(self.menu_frame, text=f"I.V.A: ", font=("Calibri", 11, "bold")) \
             .place(x=30, y=530)
@@ -230,7 +230,7 @@ class MainSystem:
         self.subtotal_value = float("{:.2f}".format(round(self.subtotal_value, 2)))
         self.subtotal_input.destroy()
         self.subtotal_input = Label(self.menu_frame, text=f"{self.subtotal_value} $", font=("Calibri", 12))
-        self.subtotal_input.place(x=100, y=600)
+        self.subtotal_input.place(x=100, y=500)
 
     def set_total(self, sub_total, IVA_porcentage):
         self.total_value = sub_total + (sub_total * (IVA_porcentage / 100))
@@ -238,4 +238,4 @@ class MainSystem:
         self.total_input.destroy()
         self.total_input = Label(self.menu_frame, text=f"{self.total_value} $",
                                  font=("Calibri", 14, "bold"), fg="green")
-        self.total_input.place(x=170, y=660)
+        self.total_input.place(x=170, y=560)

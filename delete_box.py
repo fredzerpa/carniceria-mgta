@@ -11,32 +11,39 @@ def show_delete_box(prev_class):
     except:
         prev_class.terminal_data.insert(END, f"{prev_class.name.upper()} ~ Opening Deleting Product Box")
         if prev_class.list_items.size() > 0:
-            prev_class.terminal_data.see(END)
-            response = simpledialog.askstring("ADMIN Permission", "Por favor introduzca una clave ADMIN para continuar.",
-                                              show="*")
-            if response is not None:
-                is_admin = False
-                with open("./records/accounts.txt") as file:
-                    for account in file:
-                        data_list = account.split("||")
-                        username = data_list[0].strip()
-                        password = data_list[1].strip()
-                        job = data_list[2].strip()
-                        if response == password:
-                            is_admin = True
-                            break
-                if is_admin:
-                    window = DeleteBox(prev_class)
-                    prev_class.terminal_data.insert(END, f"[{username.upper()} Permission Granted]")
-                    prev_class.terminal_data.see(END)
-                    center_window(window.root, 300, 500)
+            if not prev_class.job == "admin":
+                response = simpledialog.askstring("ADMIN Permission",
+                                                  "Por favor introduzca una clave ADMIN para continuar.",
+                                                  show="*")
+                if response is not None:
+                    is_admin = False
+                    with open("./records/accounts.txt") as file:
+                        for account in file:
+                            data_list = account.split("||")
+                            username = data_list[0].strip()
+                            password = data_list[1].strip()
+                            job = data_list[2].strip()
+                            if response == password:
+                                is_admin = True
+                                break
+                    if is_admin:
+                        window = DeleteBox(prev_class)
+                        prev_class.terminal_data.insert(END, f"[{username.upper()} Permission Granted]")
+                        prev_class.terminal_data.see(END)
+                        center_window(window.root, 300, 500)
+                    else:
+                        messagebox.showerror("Error no access", "Lo siento pero la clave no coincide con la de un ADMIN")
+                        prev_class.terminal_data.insert(END, "[Access Denied]: Password is not from ADMIN")
+                        prev_class.terminal_data.see(END)
+
                 else:
-                    messagebox.showerror("Error no access", "Lo siento pero la clave no coincide con la de un ADMIN")
-                    prev_class.terminal_data.insert(END, "[Access Denied]: Password is not from ADMIN")
+                    prev_class.terminal_data.insert(END, "[Access Denied]: No password received")
                     prev_class.terminal_data.see(END)
             else:
-                prev_class.terminal_data.insert(END, "[Access Denied]: No password received")
+                window = DeleteBox(prev_class)
+                prev_class.terminal_data.insert(END, f"[{prev_class.name.upper()} Permission Granted]")
                 prev_class.terminal_data.see(END)
+                center_window(window.root, 300, 500)
         else:
             prev_class.terminal_data.insert(END, "[Access Denied]: No product selected")
             prev_class.terminal_data.see(END)
@@ -79,12 +86,12 @@ class DeleteBox:
         scrollbar_products.config(command=self.listbox_products.yview)
 
         # Instructions
-        Label(self.root, text="Instrucciones:", font=("Sans-serif", 12), bg="white")\
+        Label(self.root, text="Instrucciones:", font=("Sans-serif", 12), bg="white") \
             .place(x=15, y=410)
         Label(self.root, text="1. Hacer doble click sobre el nombre.",
-              font=("Sans-serif", 10), bg="white", wraplength=250)\
+              font=("Sans-serif", 10), bg="white", wraplength=250) \
             .place(x=15, y=435)
-        Label(self.root, text="2. Cerrar esta ventana al finalizar.", font=("Sans-serif", 10), bg="white")\
+        Label(self.root, text="2. Cerrar esta ventana al finalizar.", font=("Sans-serif", 10), bg="white") \
             .place(x=15, y=455)
 
     # Validate the Entry is INT
@@ -117,4 +124,3 @@ class DeleteBox:
                                                       f"- {item_subtotal}$, "
                                                       f"on line {item_line_on_bill}")
             self.main_class.terminal_data.see(END)
-
